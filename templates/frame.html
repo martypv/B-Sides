@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Frame</title>
+
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+
+</head>
+<body>
+
+<h1>Frame</h1>
+
+<div class="container">
+    {% block content %}
+        {% block page-content %}{% endblock %}
+    {% endblock %}
+</div>
+
+</body>
+</html>

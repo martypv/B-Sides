@@ -1,4 +1,6 @@
-{% extends "bootstrap/base.html" %}
+{% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
 {% block title %}Home{% endblock %}
 {% block navbar %}
     <div class="navbar navbar-inverse" role="navigation">
@@ -23,12 +25,12 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="page-header">
-            <h1>Home Page</h1>
-        </div>
-        {% block page_content %}
-        {% endblock %}
-    </div>
+
+{% block page_content %}
+            <div class="page-header">
+                {% if code %}{{ code}}{% else %}Code{% endif %}
+            </div>
+            {{ wtf.quick_form(form) }}
 {% endblock %}
 
+{% endblock %}
