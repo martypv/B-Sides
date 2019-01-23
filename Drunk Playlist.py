@@ -5,17 +5,25 @@ from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, IntegerField, PasswordField
 from wtforms.validators import DataRequired
+from flask_sqlalchemy import SQLAlchemy
 
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'pleasedont'
 
 bootstrap = Bootstrap(app)
 
+# ---------- DATABASE CLASSES ----------
+
+
+# ---------- FORM CLASSES --------------
+
 class joinForm(FlaskForm):
     code = StringField('Room Code: ', validators=[DataRequired()])
     submit = SubmitField('OK')
 
+# ---------- APP ROUTES/PAGES ----------
 
 @app.route('/')
 def index():
