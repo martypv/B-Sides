@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Player</title>
+</head>
+<body>
+            <h2>Player Below</h2>
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script>
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      const token = 'BQCYyn1g_cdrIuMBAFspzCIrGgzJsGY1hIvTos03arF26q9ky2xGzXPgmkzCnlaPHu62lY9opC1qOfLLkfKPLkdixo4vnE5AO427f1Y3PbwS6lYCXoNloKhZ1PWA-jCSTiLEnUIq73kiIMEq7LAtUxbe1SHUOLaRf0GWt_ANy-c';
+      const player = new Spotify.Player({
+        name: 'Drunk Test Player',
+        getOAuthToken: cb => { cb(token); },
+          volume: 0.5
+      });
+
+      // Error handling
+      player.addListener('initialization_error', ({ message }) => { console.error(message); });
+      player.addListener('authentication_error', ({ message }) => { console.error(message); });
+      player.addListener('account_error', ({ message }) => { console.error(message); });
+      player.addListener('playback_error', ({ message }) => { console.error(message); });
+
+      // Playback status updates
+      player.addListener('player_state_changed', state => { console.log(state); });
+
+      // Ready
+      player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id);
+      });
+
+      // Not Ready
+      player.addListener('not_ready', ({ device_id }) => {
+        console.log('Device ID has gone offline', device_id);
+      });
+
+      // Connect to the player!
+      player.connect().then(success => {
+        if (success) {
+        console.log('The Web Playback SDK successfully connected to Spotify!');
+        }
+        });
+
+      player.getCurrentState().then(state => {
+        if (!state) {
+        console.error('User is not playing music through the Web Playback SDK');
+        return;
+        }
+
+        let {
+            current_track,
+            next_tracks: [next_track]
+        } = state.track_window;
+
+        console.log('Currently Playing', current_track);
+        console.log('Playing Next', next_track);
+
+
+});
+    };
+
+
+    </script>
+    <iframe src="https://open.spotify.com/embed/user/birdforceone/playlist/5GphGK4RJQS0HxduJvqgFH" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    <script>
+
+    </script>
+
+</body>
+</html>

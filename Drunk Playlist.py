@@ -5,7 +5,6 @@ from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, IntegerField, PasswordField
 from wtforms.validators import DataRequired
-from flask_sqlalchemy import SQLAlchemy
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -28,6 +27,11 @@ class joinForm(FlaskForm):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+@app.route('/player')
+def player():
+    return render_template('player.html')
 
 
 @app.errorhandler(404)
