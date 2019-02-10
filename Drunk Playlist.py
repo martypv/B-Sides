@@ -3,6 +3,7 @@ from flask import Flask, render_template, session, redirect, url_for
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
+from Spotify import spotify
 from wtforms import StringField, SubmitField, IntegerField, PasswordField
 from wtforms.validators import DataRequired
 
