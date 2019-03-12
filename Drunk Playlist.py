@@ -32,7 +32,7 @@ def index():
 
 @app.route('/player')
 def player():
-    return render_template('player.html')
+    return render_template('player2.html')
 
 
 @app.errorhandler(404)

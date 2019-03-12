@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Spotify Web Playback SDK Quick Start Tutorial</title>
+</head>
+<body>
+  <h1>Spotify Web Playback SDK Quick Start Tutorial</h1>
+  <h2>Open your console log: <code>View > Developer > JavaScript Console</code></h2>
+
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+
+  <script>
+	var spotifyToken = 'BQCTLop1aKKrKKr_6f2zY49-4YNqp4AfjAx_4VScPCJvfwBCj4EoS5kyca9xN_-KOGrltDY5g7H8ETM1DSeNUHzhmg7SpbPsJvPgqw3rbNE8Xoc9mumGQ_DZGVySKO5X6iJfqxEBKtdWFekNE9aozO25U6DebAF70bAKN8ECuto'
+
+        var spotifyDevice = '';
+
+	var spotifyPlayer = '';
+
+
+        function runMyPlayer() {
+             console.log('running my player');
+
+             var xhttp = new XMLHttpRequest();
+	     xhttp.onreadystatechange = function() {
+                 if (xhttp.readyState == 4){
+                     console.log("AJAX: "+xhttp.status+" "+xhttp.response);
+                 }
+             }
+
+             xhttp.open("PUT","https://api.spotify.com/v1/me/player/play?device_id="+spotifyDevice);
+             xhttp.setRequestHeader("Accept","application/json");
+             xhttp.setRequestHeader("Content-Type","application/json");
+             xhttp.setRequestHeader("Authorization","Bearer "+spotifyToken);
+             xhttp.send("{\"context_uri\":\"spotify:album:5ht7ItJgpBH7W6vJ5BqpPr\",\"offset\":{\"position\":5},\"position_ms\":0}");
+        }
+
+
+  </script>
+
+  <script>
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      const token = spotifyToken;
+      const player = new Spotify.Player({
+        name: 'Web Playback SDK Quick Start Player',
+        getOAuthToken: cb => { cb(token); }
+      });
+
+      // Error handling
+      player.addListener('initialization_error', ({ message }) => { console.error(message); });
+      player.addListener('authentication_error', ({ message }) => { console.error(message); });
+      player.addListener('account_error', ({ message }) => { console.error(message); });
+      player.addListener('playback_error', ({ message }) => { console.error(message); });
+
+      // Playback status updates
+      player.addListener('player_state_changed', state => { console.log(state); });
+
+      // Ready
+      player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id);
+        spotifyDevice = device_id;
+	spotifyPlayer = player;
+        console.log('Spotify Device ',spotifyDevice);
+
+  
+
+	runMyPlayer();
+
+      });
+
+      // Not Ready
+      player.addListener('not_ready', ({ device_id }) => {
+        console.log('Device ID has gone offline', device_id);
+      });
+
+      // Connect to the player!
+      player.connect();
+    };
+  </script>
+</body>
+</html>
