@@ -32,7 +32,7 @@ def index():
 
 @app.route('/player')
 def player():
-    return render_template('player2.html')
+    return render_template('player.html')
 
 
 @app.errorhandler(404)
@@ -55,6 +55,10 @@ def joinRoom():
         session['code'] = form.code.data
         return redirect(url_for('joinRoom'))
     return render_template('join.html', form=form, code=session.get('code'))
+
+@app.route('/login')
+def temp():
+    return render_template('login.html')
 
 
 if __name__ == '__main__':
