@@ -1,2 +1,2 @@
-# Drunk-Playlist
+# B-Sides
 Senior project
