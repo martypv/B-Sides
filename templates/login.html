@@ -31,7 +31,7 @@
                 //need to get url for current machine
                 var current = window.location.href;
                 if (current.indexOf("bsides") >= 0){
-                    redirect_uri = "http//bsides.desmery.com/login"; // redirect uri
+                    redirect_uri = "http://bsides.desmery.com/login"; // redirect uri
                 } else {
                     redirect_uri = 'http://127.0.0.1:5000/login'; // Your redirect uri
                 }
@@ -76,7 +76,7 @@
                         localStorage.setItem('myToken', params.access_token);
 
                         if ( current.indexOf("bsides") >= 0 ){
-                            window.location.replace("http//bsides.desmery.com/player");
+                            window.location.replace("http://bsides.desmery.com/player");
                         } else {
                             window.location.replace("http://127.0.0.1:5000/player");
                         }
