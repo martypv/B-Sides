@@ -27,7 +27,15 @@
             document.getElementById('login-button').addEventListener('click', function () {
 
                 var client_id = 'abc326d64e684b3b8174dbe505405864'; // Your client id
-                var redirect_uri = 'http://127.0.0.1:5000/login'; // Your redirect uri
+                var redirect_uri = '';
+                //need to get url for current machine
+                var current = window.location.href;
+                if (current.indexOf("bsides") >= 0){
+                    redirect_uri = "http//bsides.desmery.com/login"; // redirect uri
+                } else {
+                    redirect_uri = 'http://127.0.0.1:5000/login'; // Your redirect uri
+                }
+
 
                 var state = generateRandomString(16);
 
@@ -63,9 +71,16 @@
 
                 function init() {
                     var params = getHashParams();
-                    if (params.access_token.length > 0){
+                    var current = window.location.href;
+                    if (current.indexOf("access_token") >= 0 && params.access_token.length > 0){
                         localStorage.setItem('myToken', params.access_token);
-                        window.location.replace("http://127.0.0.1:5000/player")
+
+                        if ( current.indexOf("bsides") >= 0 ){
+                            window.location.replace("http//bsides.desmery.com/player");
+                        } else {
+                            window.location.replace("http://127.0.0.1:5000/player");
+                        }
+
                     } else {
                         localStorage.setItem('myToken', '');
                     }
