@@ -4,6 +4,8 @@
   <h2 id="trackName">Track Name</h2>
   <h3 id="albumName">Album Name</h3>
   <img id="albumIm" src="">
+    <button id="skip" type="button" onclick="">One Skip</button>
+    <button id="skip_two" type="button" onclick="">Two Skips</button>
 
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
 
@@ -30,8 +32,10 @@
              xhttp.setRequestHeader("Accept","application/json");
              xhttp.setRequestHeader("Content-Type","application/json");
              xhttp.setRequestHeader("Authorization","Bearer "+spotifyToken);
-             xhttp.send("{\"context_uri\":\"spotify:album:78bpIziExqiI9qztvNFlQu\",\"offset\":{\"position\":0},\"position_ms\":0}");
+             xhttp.send("{\"context_uri\":\"spotify:user:birdforceone:playlist:5GphGK4RJQS0HxduJvqgFH\",\"offset\":{\"position\":0},\"position_ms\":0}");
+
         }
+
 
 
   </script>
@@ -40,9 +44,10 @@
     window.onSpotifyWebPlaybackSDKReady = () => {
       const token = spotifyToken;
       const player = new Spotify.Player({
-        name: 'Web Playback SDK Quick Start Player',
+        name: 'B-Sides Player',
         getOAuthToken: cb => { cb(token); }
       });
+      localStorage.setItem('the_player',player);
 
       // Error handling
       player.addListener('initialization_error', ({ message }) => { console.error(message); });
@@ -55,19 +60,35 @@
       document.getElementById('trackName').innerText = state.track_window.current_track.name;
       document.getElementById('albumName').innerText = state.track_window.current_track.album.name;
       document.getElementById('albumIm').src = state.track_window.current_track.album.images[0].url;
+
       });
+
+      function skip(option) {
+          if (option == 1){
+              player.nextTrack().then(() => {
+                  console.log("Skip one song");
+              });
+          } else {
+              player.nextTrack().then(() => {
+                  console.log("Skip one song");
+              });
+              player.nextTrack().then(() => {
+                  console.log("Skip two songs")
+              });
+          }
+      }
+
+      document.getElementById("skip").onclick = function() {skip(1)};
+      document.getElementById("skip_two").onclick = function() {skip(2)};
 
 
       // Ready
       player.addListener('ready', ({ device_id }) => {
         console.log('Ready with Device ID', device_id);
         spotifyDevice = device_id;
-	spotifyPlayer = player;
+	    spotifyPlayer = player;
         console.log('Spotify Device ',spotifyDevice);
-
-  
-
-	runMyPlayer();
+        runMyPlayer();
 
       });
 
@@ -76,8 +97,11 @@
         console.log('Device ID has gone offline', device_id);
       });
 
+
       // Connect to the player!
       player.connect();
     };
+
+
   </script>
 {% endblock %}
