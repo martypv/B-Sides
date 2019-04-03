@@ -11,7 +11,7 @@
 
 
   <script>
-	var spotifyToken = localStorage.getItem('myToken');
+	var spotify_token = localStorage.getItem('myToken');
 
         var spotifyDevice = '';
 
@@ -26,12 +26,12 @@
                  if (xhttp.readyState == 4){
                      console.log("AJAX: "+xhttp.status+" "+xhttp.response);
                  }
-             }
+             };
 
              xhttp.open("PUT","https://api.spotify.com/v1/me/player/play?device_id="+spotifyDevice);
              xhttp.setRequestHeader("Accept","application/json");
              xhttp.setRequestHeader("Content-Type","application/json");
-             xhttp.setRequestHeader("Authorization","Bearer "+spotifyToken);
+             xhttp.setRequestHeader("Authorization","Bearer "+spotify_token);
              xhttp.send("{\"context_uri\":\"spotify:user:birdforceone:playlist:5GphGK4RJQS0HxduJvqgFH\",\"offset\":{\"position\":0},\"position_ms\":0}");
 
         }
@@ -42,12 +42,12 @@
 
   <script>
     window.onSpotifyWebPlaybackSDKReady = () => {
-      const token = spotifyToken;
+      const token = spotify_token;
       const player = new Spotify.Player({
         name: 'B-Sides Player',
         getOAuthToken: cb => { cb(token); }
       });
-      localStorage.setItem('the_player',player);
+
 
       // Error handling
       player.addListener('initialization_error', ({ message }) => { console.error(message); });

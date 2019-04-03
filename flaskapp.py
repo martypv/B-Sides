@@ -47,6 +47,10 @@ def servererror(e):
 def frame():
     return render_template('frame.html')
 
+@app.route('/playlists')
+def playlists():
+    return render_template('playlists.html')
+
 @app.route('/join', methods=['GET', 'POST'])
 def joinRoom():
     form = joinForm()

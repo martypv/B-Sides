@@ -1,0 +1,42 @@
+{% extends "index.html" %}
+{% block page_content %}
+    <div id="playlist_list">
+    </div>
+
+    <script>
+        function init() {
+            var spotify_token = localStorage.getItem('myToken');
+
+
+            var request = new XMLHttpRequest();
+           // request.responseType = 'json';
+            request.onreadystatechange = function () {
+                if(request.readyState == 4){
+                    console.log("Request: "+ request.status + " " + request.response);
+                    var req = JSON.parse(this.responseText);
+                    //localStorage.setItem("local", req);
+                    var num_playlists = req.items.length;
+                    for(var i = 0; i < num_playlists; i++){
+                        //document.getElementById("playlist_list").innerHTML += "<li id=play'" + i + "'>" + req.items[i].name +"</li>";
+                        document.getElementById("playlist_list").innerHTML += "<input type='radio' name='playlist' value='" + req.items[i].uri + "'>" + req.items[i].name + "</input>"
+                        
+                    }
+
+                }
+            };
+
+            request.open("GET","https://api.spotify.com/v1/me/playlists");
+            request.setRequestHeader("Accept","application/json");
+            request.setRequestHeader("Content-Type", "application/json");
+            request.setRequestHeader("Authorization", "Bearer " + spotify_token);
+            request.send();
+            //var local = localStorage.getItem("local");
+            //console.log(local);
+
+        }
+
+        window.onload = init;
+
+    </script>
+
+{% endblock %}
