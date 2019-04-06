@@ -1,11 +1,9 @@
-h1 {
-    color: azure;
+input[type=radio] {
+    padding-left: 15%;
+    width: 100%;
+    text-align: center;
 }
 
-body {
-    background-color: darkslategrey;
-}
-
-p {
-    color: azure;
+.sub {
+    color: darkslategrey;
 }

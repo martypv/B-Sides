@@ -12,6 +12,7 @@
 
   <script>
 	var spotify_token = localStorage.getItem('myToken');
+	var playlist = localStorage.getItem('current_playlist');
 
         var spotifyDevice = '';
 
@@ -32,7 +33,7 @@
              xhttp.setRequestHeader("Accept","application/json");
              xhttp.setRequestHeader("Content-Type","application/json");
              xhttp.setRequestHeader("Authorization","Bearer "+spotify_token);
-             xhttp.send("{\"context_uri\":\"spotify:user:birdforceone:playlist:5GphGK4RJQS0HxduJvqgFH\",\"offset\":{\"position\":0},\"position_ms\":0}");
+             xhttp.send("{\"context_uri\":\"" + playlist + "\",\"offset\":{\"position\":0},\"position_ms\":0}");
 
         }
 

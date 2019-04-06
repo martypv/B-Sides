@@ -1,6 +1,18 @@
 {% extends "index.html" %}
 {% block page_content %}
+    <style>
+    input[type=radio] {
+        width: 2%;
+        border-style: solid;
+        border-width: 2px;
+        border-color: black;
+    }
+
+    </style>
     <div id="playlist_list">
+    <form id="playlist_form">
+
+    </form>
     </div>
 
     <script>
@@ -12,16 +24,18 @@
            // request.responseType = 'json';
             request.onreadystatechange = function () {
                 if(request.readyState == 4){
+
                     console.log("Request: "+ request.status + " " + request.response);
                     var req = JSON.parse(this.responseText);
-                    //localStorage.setItem("local", req);
                     var num_playlists = req.items.length;
+
                     for(var i = 0; i < num_playlists; i++){
                         //document.getElementById("playlist_list").innerHTML += "<li id=play'" + i + "'>" + req.items[i].name +"</li>";
-                        document.getElementById("playlist_list").innerHTML += "<input type='radio' name='playlist' value='" + req.items[i].uri + "'>" + req.items[i].name + "</input>"
-                        
+                        document.getElementById("playlist_form").innerHTML += "<br><input type='radio' name='playlist' value='" + req.items[i].uri + "'>" + req.items[i].name + "</input>";
                     }
 
+                    var submit = "<br><button class='sub' type='button' onclick='redirect_page(this.form)'>Submit</button>";
+                    document.getElementById("playlist_form").innerHTML += submit;
                 }
             };
 
@@ -30,9 +44,17 @@
             request.setRequestHeader("Content-Type", "application/json");
             request.setRequestHeader("Authorization", "Bearer " + spotify_token);
             request.send();
-            //var local = localStorage.getItem("local");
-            //console.log(local);
+        }
 
+        function redirect_page(play_form) {
+            console.log("Selected Playlist: " + play_form.playlist.value);
+            localStorage.setItem('current_playlist', play_form.playlist.value);
+            var current = window.location.href;
+            if ( current.indexOf("bsides") >= 0 ){
+                            window.location.replace("https://bsides.woodstocktimes.com/player");
+                        } else {
+                            window.location.replace("http://127.0.0.1:5000/player");
+                        }
         }
 
         window.onload = init;
