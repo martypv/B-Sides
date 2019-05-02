@@ -91,7 +91,7 @@ def joinRoom():
         return redirect(url_for('joinRoom'))
     return render_template('join.html', form=form, code=session.get('code'))
 
-@app.route('/room/create', methods=['GET', 'POST'])
+@app.route('/create', methods=['GET', 'POST'])
 def createRoom():
     form = createForm()
     temp_name = ""
