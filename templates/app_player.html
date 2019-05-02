@@ -1,11 +1,12 @@
 {% extends "index.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
 {% block page_content %}
+    <h1 id="room_code">{{ code }}</h1>
   <h1>Track Info</h1>
   <h2 id="trackName">Track Name</h2>
   <h3 id="albumName">Album Name</h3>
   <img id="albumIm" src="">
-    <button id="skip" type="button" onclick="">One Skip</button>
-    <button id="skip_two" type="button" onclick="">Two Skips</button>
 
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -16,7 +17,10 @@
 
   <script>
 	var spotify_token = localStorage.getItem('myToken');
-	var playlist = localStorage.getItem('current_playlist');
+	//var playlist = localStorage.getItem('current_playlist');
+	var code = document.getElementById('room_code').innerHTML;
+	var cur_playlist = localStorage.getItem('playlist/' + code);
+	console.log("CURRENT PLAYLIST: ", cur_playlist);
 
     var spotifyDevice = '';
 
@@ -37,7 +41,7 @@
              xhttp.setRequestHeader("Accept","application/json");
              xhttp.setRequestHeader("Content-Type","application/json");
              xhttp.setRequestHeader("Authorization","Bearer "+spotify_token);
-             xhttp.send("{\"context_uri\":\"" + playlist + "\",\"offset\":{\"position\":0},\"position_ms\":0}");
+             xhttp.send("{\"context_uri\":\"" + cur_playlist + "\",\"offset\":{\"position\":0},\"position_ms\":0}");
 
         }
 
@@ -60,29 +64,38 @@
       player.addListener('playback_error', ({ message }) => { console.error(message); });
 
       // Playback status updates
-      player.addListener('player_state_changed', state => { console.log(state);
-      document.getElementById('trackName').innerText = state.track_window.current_track.name;
-      document.getElementById('albumName').innerText = state.track_window.current_track.album.name;
-      document.getElementById('albumIm').src = state.track_window.current_track.album.images[0].url;
+      player.addListener('player_state_changed', state => {
+          var option_one = {{ vote_a }};
+          var option_two = {{ vote_b }};
+          vote_sys(option_one,option_two);
+          console.log(state);
+          var track = state.track_window.current_track.name;
+          var album = state.track_window.current_track.album.name;
+          var im = state.track_window.current_track.album.images[0].url;
+          document.getElementById('trackName').innerText = state.track_window.current_track.name;
+          document.getElementById('albumName').innerText = state.track_window.current_track.album.name;
+          document.getElementById('albumIm').src = state.track_window.current_track.album.images[0].url;
+          var code  = document.getElementById('room_code').innerHTML;
+          localStorage.setItem('track/' + code, track);
+          localStorage.setItem('album/' + code, album);
+          localStorage.setItem('im/' + code, im);
+
 
       });
 
-      {##}
-      {#function skip(option) {#}
-      {#    if (option == 1){#}
-      {#        player.nextTrack().then(() => {#}
-      {#            console.log("Skip one song");#}
-      {#        });#}
-      {#    } else {#}
-      {#        player.nextTrack().then(() => {#}
-      {#            console.log("Skip one song");#}
-      {#        });#}
-      {#        player.nextTrack().then(() => {#}
-      {#            console.log("Skip two songs")#}
-      {#        });#}
-      {#    }#}
+        function vote_sys(option_one,option_two){
+            if (option_two > option_one){
+                player.nextTrack().then(() => {
+                    console.log("Skip");
+                });
+                player.nextTrack().then(() => {
+                    console.log("Skip");
+                });
+            }
+        }
 
-      {##}
+
+
       {#document.getElementById("skip").onclick = function() {skip(1)};#}
       {#document.getElementById("skip_two").onclick = function() {skip(2)};#}
 
@@ -107,6 +120,9 @@
       player.connect();
     };
 
-
+  function init(){
+      document.getElementById('room_code').style.display = "none";
+  }
+    window.onload = init;
   </script>
 {% endblock %}

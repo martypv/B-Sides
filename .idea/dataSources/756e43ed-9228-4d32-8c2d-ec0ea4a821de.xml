@@ -12,104 +12,93 @@
     <collation id="4" parent="1" name="NOCASE"/>
     <collation id="5" parent="1" name="RTRIM"/>
     <table id="6" parent="2" name="alembic_version"/>
-    <table id="7" parent="2" name="playlist"/>
-    <table id="8" parent="2" name="room"/>
-    <table id="9" parent="2" name="sqlite_master">
+    <table id="7" parent="2" name="room"/>
+    <table id="8" parent="2" name="sqlite_master">
       <System>1</System>
     </table>
-    <column id="10" parent="6" name="version_num">
+    <column id="9" parent="6" name="version_num">
       <Position>1</Position>
       <DataType>VARCHAR(32)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="11" parent="6" name="sqlite_autoindex_alembic_version_1">
+    <index id="10" parent="6" name="sqlite_autoindex_alembic_version_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>version_num</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="12" parent="6" name="alembic_version_pkc">
+    <key id="11" parent="6" name="alembic_version_pkc">
       <ColNames>version_num</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>sqlite_autoindex_alembic_version_1</UnderlyingIndexName>
     </key>
-    <column id="13" parent="7" name="id">
+    <column id="12" parent="7" name="id">
       <Position>1</Position>
       <DataType>INTEGER|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="14" parent="7" name="playlist_uri">
-      <Position>2</Position>
-      <DataType>VARCHAR(200)|0s</DataType>
-    </column>
-    <column id="15" parent="7" name="room_id">
-      <Position>3</Position>
-      <DataType>INTEGER|0s</DataType>
-    </column>
-    <column id="16" parent="7" name="current_track">
-      <Position>4</Position>
-      <DataType>VARCHAR(200)|0s</DataType>
-    </column>
-    <index id="17" parent="7" name="ix_playlist_playlist_uri">
-      <ColNames>playlist_uri</ColNames>
-      <ColumnCollations></ColumnCollations>
-    </index>
-    <index id="18" parent="7" name="ix_playlist_current_track">
-      <ColNames>current_track</ColNames>
-      <ColumnCollations></ColumnCollations>
-    </index>
-    <key id="19" parent="7">
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <foreign-key id="20" parent="7">
-      <ColNames>room_id</ColNames>
-      <RefTableName>room</RefTableName>
-      <RefColNames>id</RefColNames>
-    </foreign-key>
-    <column id="21" parent="8" name="id">
-      <Position>1</Position>
-      <DataType>INTEGER|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="22" parent="8" name="name">
+    <column id="13" parent="7" name="name">
       <Position>2</Position>
       <DataType>VARCHAR(64)|0s</DataType>
     </column>
-    <column id="23" parent="8" name="code">
+    <column id="14" parent="7" name="code">
       <Position>3</Position>
       <DataType>VARCHAR(120)|0s</DataType>
     </column>
-    <index id="24" parent="8" name="ix_room_code">
+    <column id="15" parent="7" name="playlist_uri">
+      <Position>4</Position>
+      <DataType>VARCHAR(200)|0s</DataType>
+    </column>
+    <column id="16" parent="7" name="cur_track_name">
+      <Position>5</Position>
+      <DataType>VARCHAR(200)|0s</DataType>
+    </column>
+    <column id="17" parent="7" name="cur_track_im">
+      <Position>6</Position>
+      <DataType>VARCHAR(200)|0s</DataType>
+    </column>
+    <index id="18" parent="7" name="ix_room_code">
       <ColNames>code</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="25" parent="8" name="ix_room_name">
+    <index id="19" parent="7" name="ix_room_name">
       <ColNames>name</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <key id="26" parent="8">
+    <index id="20" parent="7" name="ix_room_playlist_uri">
+      <ColNames>playlist_uri</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="21" parent="7" name="ix_room_cur_track_name">
+      <ColNames>cur_track_name</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="22" parent="7" name="ix_room_cur_track_im">
+      <ColNames>cur_track_im</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="23" parent="7">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="27" parent="9" name="type">
+    <column id="24" parent="8" name="type">
       <Position>1</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="28" parent="9" name="name">
+    <column id="25" parent="8" name="name">
       <Position>2</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="29" parent="9" name="tbl_name">
+    <column id="26" parent="8" name="tbl_name">
       <Position>3</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="30" parent="9" name="rootpage">
+    <column id="27" parent="8" name="rootpage">
       <Position>4</Position>
       <DataType>int|0s</DataType>
     </column>
-    <column id="31" parent="9" name="sql">
+    <column id="28" parent="8" name="sql">
       <Position>5</Position>
       <DataType>text|0s</DataType>
     </column>

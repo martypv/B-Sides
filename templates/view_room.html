@@ -1,0 +1,27 @@
+{% extends 'index.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+    <h1 id="room_code">{{ code }}</h1>
+    <h1>{{ name }}</h1>
+  <h2 id="trackName">Track Name</h2>
+  <h3 id="albumName">Album Name</h3>
+  <img id="albumIm" src="">
+    {{ wtf.quick_form(form) }}
+    <script>
+    function init() {
+        document.getElementById('room_code').style.display = "none";
+        var code = document.getElementById('room_code').innerHTML;
+        var track = localStorage.getItem('track/' + code);
+        var album = localStorage.getItem('album/' + code);
+        var im = localStorage.getItem('im/' + code);
+        console.log(track);
+        document.getElementById('trackName').innerText = track;
+        document.getElementById('albumName').innerText = album;
+        document.getElementById('albumIm').src = im;
+    }
+    window.onload = init;
+    </script>
+{% endblock %}
+
+

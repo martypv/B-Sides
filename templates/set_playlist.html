@@ -1,0 +1,102 @@
+{% extends 'index.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+
+    <h1>{{ name }}</h1>
+    <h1 id="the_code">{{ code }}</h1>
+       <style>
+    input[type=radio] {
+        width: 2%;
+        border-style: solid;
+        border-width: 2px;
+        border-color: black;
+    }
+
+    </style>
+    <div id="playlist_list">
+    <form id="playlist_form">
+
+    </form>
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{
+    url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
+    <script>
+
+        function init() {
+            document.getElementById("final").style.display = "none";
+            document.getElementById("the_code").style.display = "none";
+
+            var spotify_token = localStorage.getItem('myToken');
+
+
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function () {
+                if(request.readyState == 4){
+
+                    console.log("Request: "+ request.status + " " + request.response);
+                    var req = JSON.parse(this.responseText);
+                    var num_playlists = req.items.length;
+
+                    for(var i = 0; i < num_playlists; i++){
+                        document.getElementById("playlist_form").innerHTML += "<br><input type='radio' name='playlist' value='" + req.items[i].uri + "'>" + req.items[i].name + "</input>";
+                    }
+
+                    var submit = "<br><button class='sub' type='button' onclick='selected(this.form)'>Submit</button>";
+                    document.getElementById("playlist_form").innerHTML += submit;
+                }
+            };
+
+            request.open("GET","https://api.spotify.com/v1/me/playlists");
+            request.setRequestHeader("Accept","application/json");
+            request.setRequestHeader("Content-Type", "application/json");
+            request.setRequestHeader("Authorization", "Bearer " + spotify_token);
+            request.send();
+        }
+
+        {#function set_value(current_uri) {#}
+        {#    var selected = JSON.stringify(current_uri);#}
+        {#    $(function () {#}
+        {#        var request = $.ajax({#}
+        {#            type: "POST",#}
+        {#            contentType: "application/json; charset=utf-8",#}
+        {#            url: "/set_playlist",#}
+        {#            dataType: "json",#}
+        {#            data: selected,#}
+        {#            success: function (response) {#}
+        {#                console.log("Cool")#}
+        {#            }#}
+        {#        })#}
+        {#    })#}
+        {##}
+
+
+        function selected(play_form) {
+            console.log("Selected Playlist: " + play_form.playlist.value);
+            //localStorage.setItem('current_playlist', play_form.playlist.value);
+            var code = document.getElementById("the_code").innerHTML;
+            console.log(code);
+            localStorage.setItem('playlist/' + code, play_form.playlist.value);
+            console.log("SET PLAYLIST: ", localStorage.getItem('playlist/' + code), "   CODE: ", code);
+            document.getElementById("playlist_list").style.display = "none";
+            document.getElementById("final").style.display = "block";
+            //set_value(play_form.playlist.value);
+
+            {#var current = window.location.href;#}
+            {#if ( current.indexOf("bsides") >= 0 ){#}
+            {#                window.location.replace("https://bsides.woodstocktimes.com/player");#}
+            {#            } else {#}
+            {#                window.location.replace("http://127.0.0.1:5000/player");#}
+            {#            }#}
+        }
+
+        window.onload = init;
+
+    </script>
+    <div id="final">
+        {{ wtf.quick_form(form) }}
+    </div>
+
+
+{% endblock %}
