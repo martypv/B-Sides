@@ -89,7 +89,7 @@ def joinRoom():
         if temp is not None:
             return redirect('/room/viewer/' + form.code.data)
         return redirect(url_for('joinRoom'))
-    return render_template('join.html', form=form, code=session.get('code'))
+    return render_template('join.html', form=form)
 
 @app.route('/create', methods=['GET', 'POST'])
 def createRoom():
@@ -112,9 +112,14 @@ def viewRoom(code):
     name = Room.query.filter_by(room_code=code).first().room_name
     if form.validate_on_submit():
         if form.pick_a.data:
-            Room.query.filter_by(room_code=code).first().vote_a += 1
+            val_a = Room.query.filter_by(room_code=code).first().vote_a
+            val_a = val_a + 1
+            Room.query.filter_by(room_code=code).first().vote_a = val_a
+            print(Room.query.filter_by(room_code=code).first().vote_a)
         if form.pick_b.data:
-            Room.query.filter_by(room_code=code).first().vote_b += 1
+            val_b = Room.query.filter_by(room_code=code).first().vote_b
+            val_b += 1
+            Room.query.filter_by(room_code=code).first().vote_b = val_b
     return render_template('view_room.html', code=code, name=name, form=form)
 
 @app.route('/room/play/<code>', methods=['GET', 'POST'])
@@ -122,11 +127,10 @@ def playRoom(code):
     done = Room.query.filter_by(room_code=code).first().vote_open
     votes_a = Room.query.filter_by(room_code=code).first().vote_a
     votes_b = Room.query.filter_by(room_code=code).first().vote_b
-
-    if done is False:
-        Room.query.filter_by(room_code=code).first().vote_a = 0
-        Room.query.filter_by(room_code=code).first().vote_b = 0
-        Room.query.filter_by(room_code=code).first().vote_open = True
+    # if done is False:
+    #     Room.query.filter_by(room_code=code).first().vote_a = 0
+    #     Room.query.filter_by(room_code=code).first().vote_b = 0
+    #     Room.query.filter_by(room_code=code).first().vote_open = True
     return render_template('app_player.html', code=code, vote_a=votes_a, vote_b=votes_b, done=done)
 
 @app.route('/set_playlist/<code>', methods=['GET', 'POST', 'PUT'])

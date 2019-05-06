@@ -8,12 +8,6 @@
     <button id="skip_two" type="button" onclick="">Two Skips</button>
 
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
-    <script>window.jQuery || document.write('<script src="{{
-    url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
-
-
   <script>
 	var spotify_token = localStorage.getItem('myToken');
 	var playlist = localStorage.getItem('current_playlist');
@@ -52,7 +46,6 @@
         getOAuthToken: cb => { cb(token); }
       });
 
-
       // Error handling
       player.addListener('initialization_error', ({ message }) => { console.error(message); });
       player.addListener('authentication_error', ({ message }) => { console.error(message); });
@@ -61,30 +54,32 @@
 
       // Playback status updates
       player.addListener('player_state_changed', state => { console.log(state);
+      //state.disallows.resuming = false;
+      //state.disallows.skipping_prev = false;
       document.getElementById('trackName').innerText = state.track_window.current_track.name;
       document.getElementById('albumName').innerText = state.track_window.current_track.album.name;
       document.getElementById('albumIm').src = state.track_window.current_track.album.images[0].url;
 
       });
 
-      {##}
-      {#function skip(option) {#}
-      {#    if (option == 1){#}
-      {#        player.nextTrack().then(() => {#}
-      {#            console.log("Skip one song");#}
-      {#        });#}
-      {#    } else {#}
-      {#        player.nextTrack().then(() => {#}
-      {#            console.log("Skip one song");#}
-      {#        });#}
-      {#        player.nextTrack().then(() => {#}
-      {#            console.log("Skip two songs")#}
-      {#        });#}
-      {#    }#}
 
-      {##}
-      {#document.getElementById("skip").onclick = function() {skip(1)};#}
-      {#document.getElementById("skip_two").onclick = function() {skip(2)};#}
+      function skip(option) {
+          if (option == 1) {
+              player.nextTrack().then(() => {
+                  console.log("Skip one song");
+              });
+          } else {
+              player.nextTrack().then(() => {
+                  console.log("Skip one song");
+              });
+              player.nextTrack().then(() => {
+                  console.log("Skip two songs")
+              });
+          }
+      }
+
+      document.getElementById("skip").onclick = function() {skip(1)};
+      document.getElementById("skip_two").onclick = function() {skip(2)};
 
 
       // Ready

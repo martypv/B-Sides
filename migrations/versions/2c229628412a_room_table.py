@@ -1,8 +1,8 @@
 """room_table
 
-Revision ID: ea3746bc2d9d
+Revision ID: 2c229628412a
 Revises: 
-Create Date: 2019-05-01 17:10:48.633180
+Create Date: 2019-05-03 00:29:51.239613
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'ea3746bc2d9d'
+revision = '2c229628412a'
 down_revision = None
 branch_labels = None
 depends_on = None

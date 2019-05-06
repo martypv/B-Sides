@@ -40,7 +40,7 @@
              xhttp.open("PUT","https://api.spotify.com/v1/me/player/play?device_id="+spotifyDevice);
              xhttp.setRequestHeader("Accept","application/json");
              xhttp.setRequestHeader("Content-Type","application/json");
-             xhttp.setRequestHeader("Authorization","Bearer "+spotify_token);
+             xhttp.setRequestHeader("Authorization","Bearer " + spotify_token);
              xhttp.send("{\"context_uri\":\"" + cur_playlist + "\",\"offset\":{\"position\":0},\"position_ms\":0}");
 
         }
@@ -65,9 +65,11 @@
 
       // Playback status updates
       player.addListener('player_state_changed', state => {
-          var option_one = {{ vote_a }};
-          var option_two = {{ vote_b }};
-          vote_sys(option_one,option_two);
+
+          var code  = document.getElementById('room_code').innerHTML;
+          var option_one = JSON.parse(localStorage.getItem('vote_a/' + code));
+          var option_two = JSON.parse(localStorage.getItem('vote_b/' + code));
+          //vote_sys(option_one,option_two,code);
           console.log(state);
           var track = state.track_window.current_track.name;
           var album = state.track_window.current_track.album.name;
@@ -75,7 +77,7 @@
           document.getElementById('trackName').innerText = state.track_window.current_track.name;
           document.getElementById('albumName').innerText = state.track_window.current_track.album.name;
           document.getElementById('albumIm').src = state.track_window.current_track.album.images[0].url;
-          var code  = document.getElementById('room_code').innerHTML;
+
           localStorage.setItem('track/' + code, track);
           localStorage.setItem('album/' + code, album);
           localStorage.setItem('im/' + code, im);
@@ -83,7 +85,7 @@
 
       });
 
-        function vote_sys(option_one,option_two){
+        function vote_sys(option_one,option_two,code){
             if (option_two > option_one){
                 player.nextTrack().then(() => {
                     console.log("Skip");
@@ -92,6 +94,8 @@
                     console.log("Skip");
                 });
             }
+            localStorage.setItem('vote_a/' + code, JSON.stringify(0));
+            localStorage.setItem('vote_b/' + code, JSON.stringify(0));
         }
 
 

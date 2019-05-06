@@ -69,23 +69,23 @@
           return hashParams;
         }
 
-                function init() {
-                    var params = getHashParams();
-                    var current = window.location.href;
-                    if (current.indexOf("access_token") >= 0 && params.access_token.length > 0){
-                        localStorage.setItem('myToken', params.access_token);
+        function init() {
+            var params = getHashParams();
+            var current = window.location.href;
+            if (current.indexOf("access_token") >= 0 && params.access_token.length > 0){
+                localStorage.setItem('myToken', params.access_token);
 
-                        if ( current.indexOf("bsides") >= 0 ){
-                            window.location.replace("https://bsides.woodstocktimes.com/create");
-                        } else {
-                            window.location.replace("http://127.0.0.1:5000/create");
-                        }
-
-                    } else {
-                        localStorage.setItem('myToken', '');
-                    }
-
+                if ( current.indexOf("bsides") >= 0 ){
+                    window.location.replace("https://bsides.woodstocktimes.com/create");
+                } else {
+                    window.location.replace("http://127.0.0.1:5000/create");
                 }
+
+            } else {
+                localStorage.setItem('myToken', '');
+            }
+
+        }
 
 
             </script>

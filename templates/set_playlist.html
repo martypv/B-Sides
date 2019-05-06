@@ -78,6 +78,9 @@
             var code = document.getElementById("the_code").innerHTML;
             console.log(code);
             localStorage.setItem('playlist/' + code, play_form.playlist.value);
+            var vote = 0;
+            localStorage.setItem('vote_a/' + code, JSON.stringify(vote));
+            localStorage.setItem('vote_b/' + code, JSON.stringify(vote));
             console.log("SET PLAYLIST: ", localStorage.getItem('playlist/' + code), "   CODE: ", code);
             document.getElementById("playlist_list").style.display = "none";
             document.getElementById("final").style.display = "block";

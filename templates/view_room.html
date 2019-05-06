@@ -7,7 +7,9 @@
   <h2 id="trackName">Track Name</h2>
   <h3 id="albumName">Album Name</h3>
   <img id="albumIm" src="">
-    {{ wtf.quick_form(form) }}
+{#    <!----{{ wtf.quick_form(form) }}---->#}
+    <button id="vote_a" type="button" onclick="up_a()">----A----</button>
+    <button id="vote_b" type="button" onclick="up_b()">----B----</button>
     <script>
     function init() {
         document.getElementById('room_code').style.display = "none";
@@ -19,6 +21,22 @@
         document.getElementById('trackName').innerText = track;
         document.getElementById('albumName').innerText = album;
         document.getElementById('albumIm').src = im;
+    }
+
+    function up_a(){
+        var code = document.getElementById('room_code').innerHTML;
+        var inc = JSON.parse(localStorage.getItem('vote_a/' + code));
+        inc += 1;
+        console.log("Number of votes for A:", inc);
+        localStorage.setItem('vote_a/' + code, JSON.stringify(inc));
+    }
+
+    function up_b(){
+        var code = document.getElementById('room_code').innerHTML;
+        var inc = JSON.parse(localStorage.getItem('vote_b/' + code));
+        inc += 1;
+        console.log("Number of votes for B:", inc);
+        localStorage.setItem('vote_b/' + code, JSON.stringify(inc));
     }
     window.onload = init;
     </script>
