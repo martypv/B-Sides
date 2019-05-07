@@ -69,7 +69,7 @@
           var code  = document.getElementById('room_code').innerHTML;
           var option_one = JSON.parse(localStorage.getItem('vote_a/' + code));
           var option_two = JSON.parse(localStorage.getItem('vote_b/' + code));
-          //vote_sys(option_one,option_two,code);
+          vote_sys(option_one,option_two,code);
           console.log(state);
           var track = state.track_window.current_track.name;
           var album = state.track_window.current_track.album.name;
@@ -110,6 +110,15 @@
         spotifyDevice = device_id;
 	    spotifyPlayer = player;
         console.log('Spotify Device ',spotifyDevice);
+        const iframe = document.querySelector('iframe[src="https://sdk.scdn.co/embedded/index.html"]');
+
+        if (iframe) {
+            iframe.style.display = 'block';
+            iframe.style.position = 'absolute';
+            iframe.style.top = '-1000px';
+            iframe.style.left = '-1000px';
+}
+
         runMyPlayer();
 
       });
