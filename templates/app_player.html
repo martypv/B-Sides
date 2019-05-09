@@ -3,9 +3,11 @@
 
 {% block page_content %}
     <h1 id="room_code">{{ code }}</h1>
-  <h1>Track Info</h1>
-  <h2 id="trackName">Track Name</h2>
-  <h3 id="albumName">Album Name</h3>
+    <h1 id="cur_playlist">{{ uri }}</h1>
+  <h1>{{ name }}</h1>
+  <h2 id="trackName">Track: </h2>
+    <h4 id="artistName"> Artist: </h4>
+  <h4 id="albumName">Album: </h4>
   <img id="albumIm" src="">
 
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
@@ -19,8 +21,14 @@
 	var spotify_token = localStorage.getItem('myToken');
 	//var playlist = localStorage.getItem('current_playlist');
 	var code = document.getElementById('room_code').innerHTML;
+	//var cur_playlist = document.getElementById('cur_playlist').innerHTML;
+
+
+
 	var cur_playlist = localStorage.getItem('playlist/' + code);
 	console.log("CURRENT PLAYLIST: ", cur_playlist);
+
+
 
     var spotifyDevice = '';
 
@@ -67,21 +75,26 @@
       player.addListener('player_state_changed', state => {
 
           var code  = document.getElementById('room_code').innerHTML;
-          var option_one = JSON.parse(localStorage.getItem('vote_a/' + code));
-          var option_two = JSON.parse(localStorage.getItem('vote_b/' + code));
+          {#var option_one = JSON.parse(localStorage.getItem('vote_a/' + code));#}
+          {#var option_two = JSON.parse(localStorage.getItem('vote_b/' + code));#}
+          var option_one = {{ vote_a }};
+          var option_two = {{ vote_b }};
           vote_sys(option_one,option_two,code);
           console.log(state);
           var track = state.track_window.current_track.name;
+          var artist = state.track_window.current_track.artists[0].name;
           var album = state.track_window.current_track.album.name;
           var im = state.track_window.current_track.album.images[0].url;
-          document.getElementById('trackName').innerText = state.track_window.current_track.name;
-          document.getElementById('albumName').innerText = state.track_window.current_track.album.name;
-          document.getElementById('albumIm').src = state.track_window.current_track.album.images[0].url;
-
-          localStorage.setItem('track/' + code, track);
-          localStorage.setItem('album/' + code, album);
-          localStorage.setItem('im/' + code, im);
-
+          document.getElementById('trackName').innerText = "Track: " + track;
+          document.getElementById('albumName').innerText = "Album: " + album;
+          document.getElementById('albumIm').src = im;
+          document.getElementById('artistName').innerText = "Artist: " + artist;
+          {#localStorage.setItem('track/' + code, track);#}
+          {#localStorage.setItem('album/' + code, album);#}
+          {#localStorage.setItem('im/' + code, im);#}
+          {#var done = false;#}
+          send(track, code, artist, im, album);
+          {#done = true;#}
 
       });
 
@@ -96,6 +109,20 @@
             }
             localStorage.setItem('vote_a/' + code, JSON.stringify(0));
             localStorage.setItem('vote_b/' + code, JSON.stringify(0));
+        }
+
+        function send(the_track, code, the_artist, the_im, the_album) {
+            // write start up code here
+                $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+                $.getJSON($SCRIPT_ROOT + '/room/play/' + code, {
+                    track: the_track,
+                    artist: the_artist,
+                    album: the_album,
+                    im: the_im
+                }, function (data) {
+                    var response = data.result;
+                    console.log("NEW RESPONSE: ", response);
+                });
         }
 
 
@@ -117,7 +144,7 @@
             iframe.style.position = 'absolute';
             iframe.style.top = '-1000px';
             iframe.style.left = '-1000px';
-}
+        }
 
         runMyPlayer();
 
@@ -135,6 +162,8 @@
 
   function init(){
       document.getElementById('room_code').style.display = "none";
+      document.getElementById('cur_playlist').style.display = "none";
+
   }
     window.onload = init;
   </script>

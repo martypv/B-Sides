@@ -23,9 +23,11 @@ class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     room_name = db.Column(db.String(64), index=True)
     room_code = db.Column(db.String(64), index=True)
- #   playlist_uri = db.Column(db.String(200), index=True)
- #   cur_track_name = db.Column(db.String(200), index=True)
- #   cur_track_im = db.Column(db.String(200), index=True)
+    playlist_uri = db.Column(db.String(200), index=True)
+    cur_track_name = db.Column(db.String(200), index=True)
+    cur_track_im = db.Column(db.String(200), index=True)
+    cur_track_artist = db.Column(db.String(200), index=True)
+    cur_track_album = db.Column(db.String(200), index=True)
     vote_a = db.Column(db.Integer, index=True)
     vote_b = db.Column(db.Integer, index=True)
     vote_open = db.Column(db.BOOLEAN, index=True)
@@ -110,47 +112,77 @@ def createRoom():
 def viewRoom(code):
     form = voteForm()
     name = Room.query.filter_by(room_code=code).first().room_name
-    if form.validate_on_submit():
-        if form.pick_a.data:
-            val_a = Room.query.filter_by(room_code=code).first().vote_a
-            val_a = val_a + 1
-            Room.query.filter_by(room_code=code).first().vote_a = val_a
-            print(Room.query.filter_by(room_code=code).first().vote_a)
-        if form.pick_b.data:
-            val_b = Room.query.filter_by(room_code=code).first().vote_b
-            val_b += 1
-            Room.query.filter_by(room_code=code).first().vote_b = val_b
-    return render_template('view_room.html', code=code, name=name, form=form)
+    track = Room.query.filter_by(room_code=code).first().cur_track_name
+    print("THE TRACK: " + track)
+    artist = Room.query.filter_by(room_code=code).first().cur_track_artist
+    album = Room.query.filter_by(room_code=code).first().cur_track_album
+    im = Room.query.filter_by(room_code=code).first().cur_track_im
+    # if form.validate_on_submit():
+    #     if form.pick_a.data:
+    #         val_a = Room.query.filter_by(room_code=code).first().vote_a
+    #         val_a = val_a + 1
+    #         Room.query.filter_by(room_code=code).first().vote_a = val_a
+    #         print(Room.query.filter_by(room_code=code).first().vote_a)
+    #     if form.pick_b.data:
+    #         val_b = Room.query.filter_by(room_code=code).first().vote_b
+    #         val_b += 1
+    #         Room.query.filter_by(room_code=code).first().vote_b = val_b
+    votes_a = request.args.get('vote_a', 0, type=int)
+    votes_b = request.args.get('vote_b', 0, type=int)
+    Room.query.filter_by(room_code=code).first().vote_a += votes_a
+    Room.query.filter_by(room_code=code).first().vote_b += votes_b
+
+    db.session.commit()
+    return render_template('view_room.html', code=code, name=name, form=form, track=track, artist=artist, album=album, im=im)
 
 @app.route('/room/play/<code>', methods=['GET', 'POST'])
 def playRoom(code):
-    done = Room.query.filter_by(room_code=code).first().vote_open
-    votes_a = Room.query.filter_by(room_code=code).first().vote_a
-    votes_b = Room.query.filter_by(room_code=code).first().vote_b
+    # done = request.args.get('done', "", type=bool)
     # if done is False:
     #     Room.query.filter_by(room_code=code).first().vote_a = 0
     #     Room.query.filter_by(room_code=code).first().vote_b = 0
     #     Room.query.filter_by(room_code=code).first().vote_open = True
-    return render_template('app_player.html', code=code, vote_a=votes_a, vote_b=votes_b, done=done)
+    #     db.session.commit()
+    name = Room.query.filter_by(room_code=code).first().room_name
+    done = Room.query.filter_by(room_code=code).first().vote_open
+
+    votes_a = Room.query.filter_by(room_code=code).first().vote_a
+    votes_b = Room.query.filter_by(room_code=code).first().vote_b
+
+    track = request.args.get('track', "", type=str)
+    Room.query.filter_by(room_code=code).first().cur_track_name = track
+    print("THE TRACK: " + track)
+
+    uri = Room.query.filter_by(room_code=code).first().playlist_uri
+    artist = request.args.get('artist', "", type=str)
+    Room.query.filter_by(room_code=code).first().cur_track_artist = artist
+    print("THE ARTIST: " + artist)
+
+    album = request.args.get('album', "", type=str)
+    Room.query.filter_by(room_code=code).first().cur_track_album = album
+    print("THE ALBUM: " + album)
+
+    im = request.args.get('im', "", type=str)
+    Room.query.filter_by(room_code=code).first().cur_track_im = im
+
+    db.session.commit()
+    return render_template('app_player.html', name=name, code=code, vote_a=votes_a, vote_b=votes_b, done=done, uri=uri)
 
 @app.route('/set_playlist/<code>', methods=['GET', 'POST', 'PUT'])
 @app.route('/set_playlist', methods=['GET', 'POST', 'PUT'])
 def set_playlist(code):
-    db.session.commit()
     form = subForm()
     if form.validate_on_submit():
-        # uri = request.json
-        # Room.query.filter_by(room_code=code).first().playlist_uri = uri
+        uri = request.args.get('uri', "", type=str)
+        print("URI: " + uri)
+        Room.query.filter_by(room_code=code).first().playlist_uri = uri
+        db.session.commit()
         return redirect(url_for('playRoom', code=code))
     return render_template('set_playlist.html', code=code, form=form)
 
 @app.route('/login')
 def login():
     return render_template('login.html')
-
-@app.route('/nothing/')
-def nothing(name, code):
-    return render_template('nothing.html', name=name, code=code)
 
 
 if __name__ == '__main__':

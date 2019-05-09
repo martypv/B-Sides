@@ -55,21 +55,15 @@
             request.send();
         }
 
-        {#function set_value(current_uri) {#}
-        {#    var selected = JSON.stringify(current_uri);#}
-        {#    $(function () {#}
-        {#        var request = $.ajax({#}
-        {#            type: "POST",#}
-        {#            contentType: "application/json; charset=utf-8",#}
-        {#            url: "/set_playlist",#}
-        {#            dataType: "json",#}
-        {#            data: selected,#}
-        {#            success: function (response) {#}
-        {#                console.log("Cool")#}
-        {#            }#}
-        {#        })#}
-        {#    })#}
-        {##}
+        function send(the_uri,code) {
+            $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+            $.getJSON($SCRIPT_ROOT + '/set_playlist/' + code, {
+                uri: the_uri
+            }, function (data) {
+                var response = data.result;
+                console.log("NEW RESPONSE: ", response);
+            });
+        }
 
 
         function selected(play_form) {
@@ -84,6 +78,8 @@
             console.log("SET PLAYLIST: ", localStorage.getItem('playlist/' + code), "   CODE: ", code);
             document.getElementById("playlist_list").style.display = "none";
             document.getElementById("final").style.display = "block";
+            send(play_form.playlist.value, code);
+
             //set_value(play_form.playlist.value);
 
             {#var current = window.location.href;#}
