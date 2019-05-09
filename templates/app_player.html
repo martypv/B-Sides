@@ -4,11 +4,18 @@
 {% block page_content %}
     <h1 id="room_code">{{ code }}</h1>
     <h1 id="cur_playlist">{{ uri }}</h1>
+    <h6 id="a">{{ vote_a }}</h6>
+    <h6 id="b">{{ vote_b }}</h6>
   <h1>{{ name }}</h1>
+    <hr>
   <h2 id="trackName">Track: </h2>
     <h4 id="artistName"> Artist: </h4>
   <h4 id="albumName">Album: </h4>
   <img id="albumIm" src="">
+    <br>
+    <hr>
+    <h4 id="nextOne"></h4>
+    <h4 id="nextTwo"></h4>
 
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -77,18 +84,23 @@
           var code  = document.getElementById('room_code').innerHTML;
           {#var option_one = JSON.parse(localStorage.getItem('vote_a/' + code));#}
           {#var option_two = JSON.parse(localStorage.getItem('vote_b/' + code));#}
-          var option_one = {{ vote_a }};
-          var option_two = {{ vote_b }};
+          var option_one = JSON.parse(document.getElementById('a').innerText);
+          var option_two = JSON.parse(document.getElementById('b').innerText);
           vote_sys(option_one,option_two,code);
           console.log(state);
           var track = state.track_window.current_track.name;
           var artist = state.track_window.current_track.artists[0].name;
           var album = state.track_window.current_track.album.name;
           var im = state.track_window.current_track.album.images[0].url;
+          var next_one = state.track_window.next_tracks[0].artists[0].name;
+          var next_two = state.track_window.next_tracks[1].artists[0].name;
           document.getElementById('trackName').innerText = "Track: " + track;
           document.getElementById('albumName').innerText = "Album: " + album;
           document.getElementById('albumIm').src = im;
           document.getElementById('artistName').innerText = "Artist: " + artist;
+          document.getElementById("nextOne").innerText = "Next Artist: " + next_one;
+          document.getElementById("nextTwo").innerText = "Next Next Artist: " + next_two;
+
           {#localStorage.setItem('track/' + code, track);#}
           {#localStorage.setItem('album/' + code, album);#}
           {#localStorage.setItem('im/' + code, im);#}
@@ -99,6 +111,8 @@
       });
 
         function vote_sys(option_one,option_two,code){
+            console.log(option_one);
+            console.log(option_two);
             if (option_two > option_one){
                 player.nextTrack().then(() => {
                     console.log("Skip");
@@ -118,7 +132,8 @@
                     track: the_track,
                     artist: the_artist,
                     album: the_album,
-                    im: the_im
+                    im: the_im,
+                    restart: true
                 }, function (data) {
                     var response = data.result;
                     console.log("NEW RESPONSE: ", response);
@@ -163,6 +178,8 @@
   function init(){
       document.getElementById('room_code').style.display = "none";
       document.getElementById('cur_playlist').style.display = "none";
+      document.getElementById('a').style.display = "none";
+      document.getElementById('b').style.display = "none";
 
   }
     window.onload = init;
